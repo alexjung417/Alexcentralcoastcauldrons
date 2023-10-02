@@ -2,6 +2,11 @@ from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
 from src.api import auth
 
+import sqlalchemy
+from src import database as db
+
+# customers give you gold and decrease potions
+
 router = APIRouter(
     prefix="/carts",
     tags=["cart"],
@@ -33,6 +38,7 @@ class CartItem(BaseModel):
 @router.post("/{cart_id}/items/{item_sku}")
 def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
+    # need to put this in my database
 
     return "OK"
 
@@ -43,5 +49,7 @@ class CartCheckout(BaseModel):
 @router.post("/{cart_id}/checkout")
 def checkout(cart_id: int, cart_checkout: CartCheckout):
     """ """
-
+    with db.engine.begin() as connection:
+        gold = connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = gold + 50"))
+        redpotions = connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions - 1"))
     return {"total_potions_bought": 1, "total_gold_paid": 50}
