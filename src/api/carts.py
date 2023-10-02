@@ -39,7 +39,7 @@ class CartItem(BaseModel):
 def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
     # need to put this in my database
-
+    # to grab the right amount of items 
     return "OK"
 
 
@@ -50,6 +50,6 @@ class CartCheckout(BaseModel):
 def checkout(cart_id: int, cart_checkout: CartCheckout):
     """ """
     with db.engine.begin() as connection:
-        gold = connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = gold + 50"))
-        redpotions = connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions - 1"))
+        gold = connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold += 50"))
+        redpotions = connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions -= 1"))
     return {"total_potions_bought": 1, "total_gold_paid": 50}
