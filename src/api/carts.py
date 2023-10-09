@@ -68,12 +68,12 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
             red -= 1 * items[item_sku].quantity
             i += items[item_sku].quantity
             m += 50 * items[item_sku].quantity
-        if items.item_sku == "GREEN_POTION_0":
+        elif items.item_sku == "GREEN_POTION_0":
             gold += 50 * items[item_sku].quantity
             green -= 1 * items[item_sku].quantity
             i += items[item_sku].quantity
             m += 50 * items[item_sku].quantity
-        if items.item_sku == "BLUE_POTION_0":
+        elif items.item_sku == "BLUE_POTION_0":
             gold += 50 * items[item_sku].quantity
             blue -= 1 * items[item_sku].quantity
             i += items[item_sku].quantity

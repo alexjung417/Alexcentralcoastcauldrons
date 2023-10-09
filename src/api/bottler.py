@@ -77,12 +77,12 @@ def get_bottle_plan():
                 "potion_type": [100, 0, 0, 0],
                 "quantity": 2,
                 })
-    if int(num_blue_ml) >= 200:
+    elif int(num_blue_ml) >= 200:
         a.append({
                 "potion_type": [100, 0, 0, 0],
                 "quantity": 2,
                 })
-    if int(num_green_ml) >= 200:
+    elif int(num_green_ml) >= 200:
         a.append({
                 "potion_type": [0, 100, 0, 0],
                 "quantity": 2,
