@@ -51,7 +51,7 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         bpotions = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_blue_potions = {new_blue}"))
         mlg = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_green_ml = {num_g_ml}"))
         gpotions = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_green_potions = {new_green}"))
-    return "OK", new_red, "red potions"
+    return "OK"
 
 # Gets called 4 times a day
 @router.post("/plan")
@@ -75,12 +75,12 @@ def get_bottle_plan():
     # Expressed in integers from 1 to 100 that must sum up to 100.
 
     # Initial logic: bottle all barrels into red potions.
-    if int(num_red_ml) >= 500:
-        r = 5
-    if int(num_blue_ml) >= 500:
-        b = 5
-    if int(num_green_ml) >= 500:
-        g = 5
+    if int(num_red_ml) >= 200:
+        r = 2
+    if int(num_blue_ml) >= 200:
+        b = 2
+    if int(num_green_ml) >= 200:
+        g = 2
     return [{
                 "potion_type": [100, 0, 0, 0],
                 "quantity": r,
