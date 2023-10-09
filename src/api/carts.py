@@ -17,7 +17,7 @@ router = APIRouter(
 class NewCart(BaseModel):
     customer: str
 
-
+cart = {}
 @router.post("/")
 def create_cart(new_cart: NewCart):
     """ """
@@ -38,6 +38,8 @@ class CartItem(BaseModel):
 @router.post("/{cart_id}/items/{item_sku}")
 def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
+
+    cart[cart_id][item_sku] = cart_item.quantity
     # need to put this in my database
     # to grab the right amount of items 
     return "OK"
@@ -48,8 +50,18 @@ class CartCheckout(BaseModel):
 
 @router.post("/{cart_id}/checkout")
 def checkout(cart_id: int, cart_checkout: CartCheckout):
-    """ """
+    """ """     # this is wrong 
     with db.engine.begin() as connection:
-        gold = connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold += 50"))
-        redpotions = connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions -= 1"))
+        table = connection.execute(sqlalchemy.text("SELECT * FROM global_inventory"))
+
+        first = table.first()
+        gold = first.gold
+        red = first.num_red_potions
+
+    cur_cart = cart[cart_id]
+    #for items in cur_cart: 
+    gold +=1
+    red +=50
+    red = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_red_ml = {red}"))
+    gold = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET gold = {gold}")) 
     return {"total_potions_bought": 1, "total_gold_paid": 50}
