@@ -58,10 +58,7 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
 def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
     print(wholesale_catalog)
-    
-    r = 0
-    b = 0
-    g = 0
+
         
         # reads my data 
     with db.engine.begin() as connection:
@@ -73,31 +70,28 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         green = first.num_green_potions
         blue = first.num_blue_potions
         
+    a = []
     for Barrel in wholesale_catalog:
-        if int(red) < 10 and int(gold) > Barrel.price and Barrel.sku == "MINI_RED_BARREL":
+        if int(red) < 1 and int(gold) > Barrel.price and Barrel.sku == "MINI_RED_BARREL":
             gold -=Barrel.price
-            r = 1
-        if int(blue) < 10 and int(gold) > Barrel.price and Barrel.sku == "MINI_BLUE_BARREL":
-            gold -= Barrel.price
-            b =1
-        if int(green) < 10 and int(gold) > Barrel.price and Barrel.sku == "MINI_GREEN_BARREL":
-            g =1
-            gold -= Barrel.price      
-        
-    return [
-                {
+            a.append({
                     "sku": "MINI_RED_BARREL",
-                    "quantity": r
-                },
-                {
+                    "quantity": 1
+                    })
+        if int(blue) < 1 and int(gold) > Barrel.price and Barrel.sku == "MINI_BLUE_BARREL":
+            gold -= Barrel.price
+            a.append({
                     "sku": "MINI_BLUE_BARREL",
-                   "quantity": b
-                },
-                    {
+                    "quantity": 1
+                    })
+        if int(green) < 1 and int(gold) > Barrel.price and Barrel.sku == "MINI_GREEN_BARREL":
+            gold -= Barrel.price    
+            a.append({
                     "sku": "MINI_GREEN_BARREL",
-                    "quantity": g
-                    }
-            ]
+                    "quantity": 1
+                    })  
+        
+    return a
 # [Barrel(sku='LARGE_RED_BARREL', ml_per_barrel=10000, potion_type=[1, 0, 0, 0], price=500, quantity=30), 
 # Barrel(sku='MEDIUM_RED_BARREL', ml_per_barrel=2500, potion_type=[1, 0, 0, 0], price=250, quantity=10), 
 # Barrel(sku='SMALL_RED_BARREL', ml_per_barrel=500, potion_type=[1, 0, 0, 0], price=100, quantity=10), 
