@@ -59,13 +59,16 @@ def get_bottle_plan():
     """
     Go from barrel to bottle.
     """
+    r = 0
+    b = 0
+    g = 0
+
     with db.engine.begin() as connection:
         num_red_ml = connection.execute(sqlalchemy.text("SELECT num_red_ml FROM global_inventory")).first().num_red_ml
         num_green_ml = connection.execute(sqlalchemy.text("SELECT num_green_ml FROM global_inventory")).first().num_green_ml
         num_blue_ml = connection.execute(sqlalchemy.text("SELECT num_blue_ml FROM global_inventory")).first().num_blue_ml
-    r = 0
-    b = 0
-    g = 0    
+    
+    
 
     # Each bottle has a quantity of what proportion of red, blue, and
     # green potion to add.

@@ -32,21 +32,35 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
         first = table.first()
         gold = first.gold
         red = first.num_red_ml
+        blue = first.num_blue_ml
+        green = first.num_green_ml
 
     for Barrel in barrels_delivered:
-        gold -= Barrel.price
-        red += Barrel.ml_per_barrel 
+        if Barrel.sku == "SMALL_RED_BARREL":
+            gold -= Barrel.price
+            red += Barrel.ml_per_barrel
+        if Barrel.sku ==  "SMALL_BLUE_BARREL":
+            gold -= Barrel.price
+            blue += Barrel.ml_per_barrel
+        if Barrel.sku == "SMALL_GREEN_BARREL":
+            gold -= Barrel.price
+            green += Barrel.ml_per_barrel
     
     with db.engine.begin() as connection:
         r = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_red_ml = {red}"))
-        g = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET gold = {gold}"))  
-    return "OK new gold", g , r
+        g = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET gold = {gold}"))
+        b = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_blue_ml = {blue}"))
+        gr = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_green_ml = {green}"))  
+    return "OK new gold"
 
 # Gets called once a day
 @router.post("/plan")
 def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
     print(wholesale_catalog)
+    r = 0
+    b = 0
+    g = 0
         
         # reads my data 
     with db.engine.begin() as connection:
@@ -69,15 +83,15 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
             g =1
             gold -= Barrel.price      
         
-        return [
-                    {
+    return [
+                {
                     "sku": "SMALL_RED_BARREL",
                     "quantity": r
-                    },
-                    {
+                },
+                {
                     "sku": "SMALL_BLUE_BARREL",
-                    "quantity": b
-                    },
+                   "quantity": b
+                },
                     {
                     "sku": "SMALL_GREEN_BARREL",
                     "quantity": g
