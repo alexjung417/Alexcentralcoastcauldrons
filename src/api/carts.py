@@ -63,17 +63,17 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     m = 0
     cur_cart = cart[cart_id]
     for items in cur_cart: 
-        if items.item_sku == "RED_POTION":
+        if items.item_sku == "RED_POTION_0":
             gold += 50 * items[item_sku].quantity
             red -= 1 * items[item_sku].quantity
             i += items[item_sku].quantity
             m += 50 * items[item_sku].quantity
-        if items.item_sku == "GREEN_POTION":
+        if items.item_sku == "GREEN_POTION_0":
             gold += 50 * items[item_sku].quantity
             green -= 1 * items[item_sku].quantity
             i += items[item_sku].quantity
             m += 50 * items[item_sku].quantity
-        if items.item_sku == "BLUE_POTION":
+        if items.item_sku == "BLUE_POTION_0":
             gold += 50 * items[item_sku].quantity
             blue -= 1 * items[item_sku].quantity
             i += items[item_sku].quantity
