@@ -66,20 +66,20 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     cur_cart = cart[cart_id]
     for items in cur_cart: 
         if items.item_sku == "RED_POTION_0":
-            gold += 50 * items[item_sku].quantity
-            red -= 1 * items[item_sku].quantity
-            i += items[item_sku].quantity
-            m += 50 * items[item_sku].quantity
+            gold += 50 * items.quantity
+            red -= 1 * items.quantity
+            i += items.quantity
+            m += 50 * items.quantity
         elif items.item_sku == "GREEN_POTION_0":
-            gold += 50 * items[item_sku].quantity
-            green -= 1 * items[item_sku].quantity
-            i += items[item_sku].quantity
-            m += 50 * items[item_sku].quantity
+            gold += 50 * items.quantity
+            green -= 1 * items.quantity
+            i += items.quantity
+            m += 50 * items.quantity
         elif items.item_sku == "BLUE_POTION_0":
-            gold += 50 * items[item_sku].quantity
-            blue -= 1 * items[item_sku].quantity
-            i += items[item_sku].quantity
-            m += 50 * items[item_sku].quantity
+            gold += 50 * items.quantity
+            blue -= 1 * items.quantity
+            i += items.quantity
+            m += 50 * items.quantity
                 
     red = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_red_potions = {red}"))
     gold = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET gold = {gold}")) 
