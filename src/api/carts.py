@@ -22,7 +22,7 @@ cart = {}
 @router.post("/")
 def create_cart(new_cart: NewCart):
     """ """
-    cart[cart_id] = {}
+    cart = {}
     return {"cart_id": 1}
 
 
