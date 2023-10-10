@@ -36,13 +36,13 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
         green = first.num_green_ml
 
     for Barrel in barrels_delivered:
-        if Barrel.sku == "MINI_RED_BARREL":
+        if Barrel.sku == "SMALL_RED_BARREL":
             gold -= Barrel.price
             red += Barrel.ml_per_barrel
-        if Barrel.sku ==  "MINI_BLUE_BARREL":
+        if Barrel.sku ==  "SMALL_BLUE_BARREL":
             gold -= Barrel.price
             blue += Barrel.ml_per_barrel
-        if Barrel.sku == "MINI_GREEN_BARREL":
+        if Barrel.sku == "SMALL_GREEN_BARREL":
             gold -= Barrel.price
             green += Barrel.ml_per_barrel
     
@@ -72,22 +72,22 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         
     a = []
     for Barrel in wholesale_catalog:
-        if int(red) < 1 and int(gold) >= Barrel.price and Barrel.sku == "MINI_RED_BARREL":
+        if int(red) < 1 and int(gold) >= Barrel.price and Barrel.sku == "SMALL_RED_BARREL":
             gold -=Barrel.price
             a.append({
-                    "sku": "MINI_RED_BARREL",
+                    "sku": "SMALL_RED_BARREL",
                     "quantity": 1
                     })
-        elif int(blue) < 1 and int(gold) >= Barrel.price and Barrel.sku == "MINI_BLUE_BARREL":
+        elif int(blue) < 1 and int(gold) >= Barrel.price and Barrel.sku == "SMALL_BLUE_BARREL":
             gold -= Barrel.price
             a.append({
-                    "sku": "MINI_BLUE_BARREL",
+                    "sku": "SMALL_BLUE_BARREL",
                     "quantity": 1
                     })
-        elif int(green) < 1 and int(gold) >= Barrel.price and Barrel.sku == "MINI_GREEN_BARREL":
+        elif int(green) < 1 and int(gold) >= Barrel.price and Barrel.sku == "SMALL_GREEN_BARREL":
             gold -= Barrel.price    
             a.append({
-                    "sku": "MINI_GREEN_BARREL",
+                    "sku": "SMALL_GREEN_BARREL",
                     "quantity": 1
                     })  
         
