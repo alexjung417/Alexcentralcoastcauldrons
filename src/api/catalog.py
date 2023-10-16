@@ -14,33 +14,51 @@ def get_catalog():
     # Can return a max of 20 items.
 
     with db.engine.begin() as connection:
-        num_red_potions = connection.execute(sqlalchemy.text("SELECT num_red_potions FROM global_inventory")).first().num_red_potions
-        num_blue_potions = connection.execute(sqlalchemy.text("SELECT num_blue_potions FROM global_inventory")).first().num_blue_potions
-        num_green_potions = connection.execute(sqlalchemy.text("SELECT num_green_potions FROM global_inventory")).first().num_green_potions
+        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[100,0,0,0]'")).first().inventory
+        rprice  = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[100,0,0,0]'")).first().price
+        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,100,0]'")).first().inventory
+        bprice = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,100,0]'")).first().price  
+        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,100,0,0]'")).first().inventory
+        gprice = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,100,0,0]'")).first().price
+        #teal = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,50,50,0]'")).first().inventory
+        #tprice = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,50,50,0]'")).first().price
+        rtype = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[100,0,0,0]'")).first().type
+        gtype = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,100,0,0]'")).first().type
+        btype = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,100,0]'")).first().type
+        #ttype = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,50,50,0]'")).first().type
+
     # only if there is more than one
     a = []
-    if num_red_potions > 1:
+    if red > 1:
         a.append({
                 "sku": "RED_POTION_0",
                 "name": "red potion",
-                "quantity": num_red_potions,
-                "price": 50,
-                "potion_type": [100, 0, 0, 0],
+                "quantity": red,
+                "price": rprice,
+                "potion_type": rtype,
             })
-    elif num_blue_potions > 1:
+    elif blue > 1:
         a.append({
                 "sku": "BLUE_POTION_0",
                 "name": "blue potion",
-                "quantity": num_blue_potions,
-                "price": 50,
-                "potion_type": [0, 0, 100, 0], 
+                "quantity": blue,
+                "price": bprice,
+                "potion_type": btype, 
             })
-    elif num_green_potions >1:
+    elif green >1:
         a.append({
                 "sku": "GREEN_POTION_0",
                 "name": "green potion",
-                "quantity": num_green_potions,
-                "price": 50,
-                "potion_type": [0, 100, 0, 0], 
+                "quantity": green,
+                "price": gprice,
+                "potion_type": gtype, 
             })
+    # elif teal >1:
+    #     a.append({
+    #             "sku": "TEAL",
+    #             "name": "yellow potion",
+    #             "quantity": teal,
+    #             "price": tprice,
+    #             "potion_type": ttype, 
+    #         })
     return a

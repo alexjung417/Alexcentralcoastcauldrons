@@ -17,13 +17,14 @@ router = APIRouter(
 class NewCart(BaseModel):
     customer: str
 
-cart = {}
 
 @router.post("/")
 def create_cart(new_cart: NewCart):
     """ """
-    cart = {}
-    return {"cart_id": 1}
+    with db.engine.begin() as connection:
+        connection.execute(sqlalchemy.text("INSERT INTO carts(name) VALUES(:new_cart)"), [{"name": new_cart}])
+        i = connection.execute(sqlalchemy.text("SELECT * FROM carts")).first().id
+    return {"cart_id": i}
 
 
 @router.get("/{cart_id}")
@@ -40,8 +41,16 @@ class CartItem(BaseModel):
 @router.post("/{cart_id}/items/{item_sku}")
 def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
-
-    cart[cart_id][item_sku] = cart_item.quantity
+    num = cart_item.quantity
+    with db.engine.begin() as connection:
+        connection.execute(sqlalchemy.text("""INSERT INTO cart_item (item_sku,quantity,cart_id) 
+                                            VALUES (potions.item_sku,  :num, :cart_id)      
+                                            FROM potions WHERE potions.item_sku = :item_sku """),
+                                            [{"num": num, "cart_id": cart_id, "item_sku": item_sku}])
+                                        # there is an syntax error at or near FROM
+#     INSERT INTO cart_item (cart_id, quantity, potions_id) 
+# SELECT :cart_id, :quantity, potions.id 
+# FROM potions WHERE potions.sku = :item_sku
     # need to put this in my database
     # to grab the right amount of items 
     return "OK"
@@ -53,37 +62,26 @@ class CartCheckout(BaseModel):
 @router.post("/{cart_id}/checkout")
 def checkout(cart_id: int, cart_checkout: CartCheckout):
     """ """     # this is wrong 
+   #https://observablehq.com/@calpoly-pierce/ddl-dml
     with db.engine.begin() as connection:
-        table = connection.execute(sqlalchemy.text("SELECT * FROM global_inventory"))
+        connection.execute(sqlalchemy.text("""UPDATE potions
+                                            SET inventory = potions.inventory - cart_item.quantity
+                                            FROM cart_item
+                                            WHERE potions.item.sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
+                                            [{"cart_id": cart_id}])
 
-        first = table.first()
-        gold = first.gold
-        red = first.num_red_potions
-        blue = first.num_blue_potions
-        green = first.num_green_potions
-    i = 0
-    m = 0
-    cur_cart = cart[cart_id]
-    for items in cur_cart: 
-        if items.item_sku == "RED_POTION_0":
-            gold += 50 * items.quantity
-            red -= 1 * items.quantity
-            i += items.quantity
-            m += 50 * items.quantity
-        elif items.item_sku == "GREEN_POTION_0":
-            gold += 50 * items.quantity
-            green -= 1 * items.quantity
-            i += items.quantity
-            m += 50 * items.quantity
-        elif items.item_sku == "BLUE_POTION_0":
-            gold += 50 * items.quantity
-            blue -= 1 * items.quantity
-            i += items.quantity
-            m += 50 * items.quantity
-                
-    red = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_red_potions = {red}"))
-    gold = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET gold = {gold}")) 
-    green = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_green_potions = {green}"))
-    blue = connection.execute(sqlalchemy.text(f"UPDATE global_inventory SET num_blue_potions = {blue}")) 
+        connection.execute(sqlalchemy.text("""UPDATE global_inventory
+                                            SET gold =  global_inventory.gold + (cart_item.quantity * potions.price)
+                                            FROM cart_item, potions
+                                            WHERE potions.item.sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
+                                            [{"cart_id": cart_id}])
 
-    return {"total_potions_bought": i, "total_gold_paid": m}
+    #UPDATE global_inventory
+    #SET gold = global_inventory.gold + (cart_item.quantity * potions.price)
+    #FROM cart_item, potions
+    #WHERE potions.item.sku = cart_item.item_sku and cart_item.cart_id = :cart_id;
+
+    # need to update the gold can probably loop through the same way 
+
+
+    return {"total_potions_bought": 10, "total_gold_paid": 0}

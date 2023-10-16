@@ -13,17 +13,32 @@ router = APIRouter(
 )
 
 @router.get("/inventory")
-def get_inventory():
+def get_inventory():        #need to change when I start pulling from the 
     """ """
     with db.engine.begin() as connection:
-        num_red_ml = connection.execute(sqlalchemy.text("SELECT num_red_ml FROM global_inventory")).first().num_red_ml
-        new_red = connection.execute(sqlalchemy.text("SELECT num_red_potions FROM global_inventory")).first().num_red_potions
-        num_green_ml = connection.execute(sqlalchemy.text("SELECT num_green_ml FROM global_inventory")).first().num_green_ml
-        new_green = connection.execute(sqlalchemy.text("SELECT num_green_potions FROM global_inventory")).first().num_green_potions
-        num_blue_ml = connection.execute(sqlalchemy.text("SELECT num_blue_ml FROM global_inventory")).first().num_blue_ml
-        new_blue = connection.execute(sqlalchemy.text("SELECT num_blue_potions FROM global_inventory")).first().num_blue_potions
+        red_ml = connection.execute(sqlalchemy.text("SELECT num_red_ml FROM global_inventory")).first().num_red_ml
+        green_ml = connection.execute(sqlalchemy.text("SELECT num_green_ml FROM global_inventory")).first().num_green_ml
+        blue_ml = connection.execute(sqlalchemy.text("SELECT num_blue_ml FROM global_inventory")).first().num_blue_ml
+        #dark_ml = connection.execute(sqlalchemy.text("SELECT num_dark_ml FROM global_inventory")).first().num_dark_ml
         gold = connection.execute(sqlalchemy.text("SELECT gold FROM global_inventory")).first().gold
-    return {"number_of_potions": 0, "ml_in_barrels": 0, "gold": gold}
+        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[100,0,0,0]'")).first().inventory 
+        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,100,0]'")).first().inventory 
+        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,100,0,0]'")).first().inventory
+        #dark = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,0,100]'")).first().inventory
+        # yellow = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,50,50,0]'")).first().inventory
+        # wrong not sure how to do it1
+        
+    
+    return {"red_potions": red,
+            "blue_potions": blue,
+            "green_potions": green,
+            #"dark_potions": dark,
+            # "yellow_potions": yellow, 
+            "red_ml": red_ml, 
+            "blue_ml": blue_ml,
+            "green_ml": green_ml,
+            #"dark_ml": dark_ml,
+            "gold": gold}
 
 class Result(BaseModel):
     gold_match: bool
