@@ -63,43 +63,20 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     print(wholesale_catalog)
         # reads my data 
     with db.engine.begin() as connection:
-        table = connection.execute(sqlalchemy.text("SELECT * FROM global_inventory"))
+        gold = connection.execute(sqlalchemy.text("SELECT gold FROM global_inventory")).first().gold        
+        a = []
+        for Barrel in wholesale_catalog:
+            for potion in potions:
+                if potion.quantity < 10 and gold >= Barrel.price and Barrel.potion_type[0] == 1:
+                    a.append({
+                            "sku": Barrel.sku,
+                            "ml_per_barrel": Barrel.ml_per_barrel,
+                            "potion_type": Barrel.potion_type,
+                            "price": Barrel.price,
+                            "quantity": 1
+                            })
+                    gold -= Barrel.price
 
-        first = table.first()
-        gold = first.gold
-        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[100,0,0,0]'")).first().inventory 
-        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,100,0]'")).first().inventory 
-        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,100,0,0]'")).first().inventory
-        
-    a = []
-    for Barrel in wholesale_catalog:
-        if red < 10 and gold >= Barrel.price and Barrel.potion_type[0] == 1:
-            a.append({
-                    "sku": Barrel.sku,
-                    "ml_per_barrel": Barrel.ml_per_barrel,
-                    "potion_type": Barrel.potion_type,
-                    "price": Barrel.price,
-                    "quantity": 1
-                    })
-            gold -= Barrel.price
-        elif blue < 10 and gold >= Barrel.price and Barrel.potion_type[2] == 1:
-            a.append({
-                    "sku": Barrel.sku,
-                    "ml_per_barrel": Barrel.ml_per_barrel,
-                    "potion_type": Barrel.potion_type,
-                    "price": Barrel.price,
-                    "quantity": 1
-                    })
-            gold -= Barrel.price
-        elif green < 10 and gold >= Barrel.price and Barrel.potion_type[1] == 1:   
-            a.append({
-                    "sku": Barrel.sku,
-                    "ml_per_barrel": Barrel.ml_per_barrel,
-                    "potion_type": Barrel.potion_type,
-                    "price": Barrel.price,
-                    "quantity": 1
-                    })  
-            gold -= Barrel.price
         
     return a
 # [Barrel(sku='LARGE_RED_BARREL', ml_per_barrel=10000, potion_type=[1, 0, 0, 0], price=500, quantity=30), 
