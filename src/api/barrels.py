@@ -63,7 +63,8 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     print(wholesale_catalog)
         # reads my data 
     with db.engine.begin() as connection:
-        gold = connection.execute(sqlalchemy.text("SELECT gold FROM global_inventory")).first().gold        
+        gold = connection.execute(sqlalchemy.text("SELECT gold FROM global_inventory")).first().gold 
+        potions = connection.execute(sqlalchemy.text("SELECT * FROM potions"))
         a = []
         for Barrel in wholesale_catalog:
             for potion in potions:
