@@ -49,9 +49,6 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
                                             WHERE potions.item_sku = :item_sku """),
                                             [{"num": num, "cart_id": cart_id, "item_sku": item_sku}])
                                         # there is an syntax error at or near FROM
-#     INSERT INTO cart_item (cart_id, quantity, potions_id) 
-# SELECT :cart_id, :quantity, potions.id 
-# FROM potions WHERE potions.sku = :item_sku
     # need to put this in my database
     # to grab the right amount of items 
     return "OK"
@@ -81,13 +78,5 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                             FROM cart_item JOIN potions
                                             WHERE potions.item_sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
                                             [{"cart_id": cart_id}])
-
-    #UPDATE global_inventory
-    #SET gold = global_inventory.gold + (cart_item.quantity * potions.price)
-    #FROM cart_item, potions
-    #WHERE potions.item.sku = cart_item.item_sku and cart_item.cart_id = :cart_id;
-
     # need to update the gold can probably loop through the same way 
-
-
     return {"total_potions_bought": total_potions, "total_gold_paid": total_gold}

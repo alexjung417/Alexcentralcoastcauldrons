@@ -67,7 +67,8 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         a = []
         for Barrel in wholesale_catalog:
             for potion in potions:
-                if potion.quantity < 10 and gold >= Barrel.price and Barrel.potion_type[0] == 1:
+                ptype = [x//100 for x in potion.type]
+                if potion.quantity < 10 and gold >= Barrel.price and Barrel.potion_type == ptype:
                     a.append({
                             "sku": Barrel.sku,
                             "ml_per_barrel": Barrel.ml_per_barrel,
@@ -77,7 +78,6 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                             })
                     gold -= Barrel.price
 
-        
     return a
 # [Barrel(sku='LARGE_RED_BARREL', ml_per_barrel=10000, potion_type=[1, 0, 0, 0], price=500, quantity=30), 
 # Barrel(sku='MEDIUM_RED_BARREL', ml_per_barrel=2500, potion_type=[1, 0, 0, 0], price=250, quantity=10), 
