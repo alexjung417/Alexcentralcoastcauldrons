@@ -32,14 +32,17 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
     #dm = 0
 
         # buys the stuff
-
+    with db.engine.begin() as connection:
+        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[100,0,0,0]'")).first().type 
+        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,100,0]'")).first().type
+        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,100,0,0]'")).first().type
     for Barrel in barrels_delivered:
         goldg = goldg - (Barrel.price * Barrel.quantity)
-        if Barrel.potion_type == [1,0,0,0]:
+        if Barrel.potion_type == red:
             redm += Barrel.ml_per_barrel * Barrel.quantity
-        elif Barrel.potion_type ==  [0,0,1,0]:
+        elif Barrel.potion_type ==  blue:
             bluem += Barrel.ml_per_barrel * Barrel.quantity
-        elif Barrel.potion_type == [0,1,0,0]:
+        elif Barrel.potion_type == green:
             greenm += Barrel.ml_per_barrel * Barrel.quantity
         #elif Barrel.potion_type == [0,0,0,1]:
         #    dm = Barrel.ml_per_barrel * Barrel.quantity  #need to add this 
@@ -73,7 +76,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         
     a = []
     for Barrel in wholesale_catalog:
-        if red < 10 and gold >= Barrel.price and Barrel.potion_type[0] == 1:
+        if red < 10 and gold >= Barrel.price and Barrel.potion_type[0] == 100:
             a.append({
                     "sku": Barrel.sku,
                     "ml_per_barrel": Barrel.ml_per_barrel,
@@ -81,7 +84,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     "price": Barrel.price,
                     "quantity": 1
                     })
-        elif blue < 10 and gold >= Barrel.price and Barrel.potion_type[2] == 1:
+        elif blue < 10 and gold >= Barrel.price and Barrel.potion_type[2] == 100:
             a.append({
                     "sku": Barrel.sku,
                     "ml_per_barrel": Barrel.ml_per_barrel,
@@ -89,7 +92,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     "price": Barrel.price,
                     "quantity": 1
                     })
-        elif green < 10 and gold >= Barrel.price and Barrel.potion_type[1] == 1:   
+        elif green < 10 and gold >= Barrel.price and Barrel.potion_type[1] == 100:   
             a.append({
                     "sku": Barrel.sku,
                     "ml_per_barrel": Barrel.ml_per_barrel,

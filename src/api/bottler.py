@@ -24,11 +24,11 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     with db.engine.begin() as connection:
         print(potions_delivered)
         additional_potions = sum(potion.quantity for potion in potions_delivered)
-        num_red_ml = sum(potion.quantity * potion.potion_type[0] for potion in potions_delivered)
-        num_blue_ml = sum(potion.quantity * potion.potion_type[2] for potion in potions_delivered)
-        num_green_ml = sum(potion.quantity * potion.potion_type[1] for potion in potions_delivered)
+        num_red_ml = sum(potion.quantity * potion.potion_type[0] for potion in potions_delivered)       # might give too much ml
+        num_blue_ml = sum(potion.quantity * potion.potion_type[2] for potion in potions_delivered)       # might give too much ml
+        num_green_ml = sum(potion.quantity * potion.potion_type[1] for potion in potions_delivered)       # might give too much ml
         #num_dark_ml = sum(potion.quantity * potion.potion_type[3] for potion in potions_delivered)
-        #num_teal_ml = sum(potion.quantity * potion.potion_type[2] for potion in potions_delivered)
+        num_teal_ml = sum(potion.quantity * potion.potion_type[2] for potion in potions_delivered)
 
     # changes above
     
@@ -64,6 +64,10 @@ def get_bottle_plan():
         num_green_ml = connection.execute(sqlalchemy.text("SELECT num_green_ml FROM global_inventory")).first().num_green_ml
         num_blue_ml = connection.execute(sqlalchemy.text("SELECT num_blue_ml FROM global_inventory")).first().num_blue_ml
         # num_dark_ml = connection.execute(sqlalchemy.text("SELECT num_dark_ml FROM global_inventory")).first().num_dark_ml
+        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[100,0,0,0]'")).first().type 
+        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,100,0]'")).first().type
+        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,100,0,0]'")).first().type
+        teal = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,50,50,0]'")).first().type
     
     a = []
 
@@ -75,25 +79,25 @@ def get_bottle_plan():
     if num_red_ml >= 200:
         total = num_red_ml //100
         a.append({
-                "potion_type": [100, 0, 0, 0],
+                "potion_type": red,      # need to grab from potions
                 "quantity": total
                 })
     elif num_green_ml >= 200:
         total = num_green_ml // 100
         a.append({
-                "potion_type": [0, 100,0, 0],
+                "potion_type": green,   # need to grab from potions
                 "quantity": total
                 })
     elif num_blue_ml >= 200:
         total = num_blue_ml // 100
         a.append({
-                "potion_type": [0, 0, 100, 0],
+                "potion_type": blue,   # need to grab from potions
                 "quantity": total
                 })
-    # elif (50 <= num_blue_ml < 200) &(50 <= num_green_ml < 200):
-    #     total = num_blue_ml // 50
-    #     a.append({
-    #         "potion_type": [0,50,50,0],
-    #         "quantity": total
-    #     })
+    elif (50 <= num_blue_ml < 200) &(50 <= num_green_ml < 200):
+        total = num_blue_ml // 50
+        a.append({
+            "potion_type": teal,
+            "quantity": total
+        })
     return a

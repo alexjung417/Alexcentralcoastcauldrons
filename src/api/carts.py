@@ -67,13 +67,13 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
         connection.execute(sqlalchemy.text("""UPDATE potions
                                             SET inventory = potions.inventory - cart_item.quantity
                                             FROM cart_item
-                                            WHERE potions.item.sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
+                                            WHERE potions.item_sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
                                             [{"cart_id": cart_id}])
 
         connection.execute(sqlalchemy.text("""UPDATE global_inventory
                                             SET gold =  global_inventory.gold + (cart_item.quantity * potions.price)
                                             FROM cart_item, potions
-                                            WHERE potions.item.sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
+                                            WHERE potions.item_sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
                                             [{"cart_id": cart_id}])
 
     #UPDATE global_inventory
@@ -84,4 +84,4 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     # need to update the gold can probably loop through the same way 
 
 
-    return {"total_potions_bought": 10, "total_gold_paid": 0}
+    return {"total_potions_bought": 0, "total_gold_paid": 0}
