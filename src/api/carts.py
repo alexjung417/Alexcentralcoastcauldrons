@@ -44,7 +44,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     num = cart_item.quantity
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""INSERT INTO cart_item(item_sku,quantity,cart_id) 
-                                            VALUES (potions.item_sku,  :num, :cart_id)      
+                                            SELECT (potions.item_sku,  :num, :cart_id)      
                                             FROM potions 
                                             WHERE potions.item_sku = :item_sku """),
                                             [{"num": num, "cart_id": cart_id, "item_sku": item_sku}])
@@ -65,6 +65,11 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     """ """     # this is wrong 
    #https://observablehq.com/@calpoly-pierce/ddl-dml
     with db.engine.begin() as connection:
+        connection.execute(sqlalchemy.text("""SELECT sum(cart_item.quantity * potions.price) as total_gold,
+                                            sum(cart_item.quantity) as total_potions,
+                                            FROM cart_item 
+                                            JOIN potions on potions.item_sku = cart_item.item_sku 
+                                            where cart_item.cart_id = :cart_id """))
         connection.execute(sqlalchemy.text("""UPDATE potions
                                             SET inventory = potions.inventory - cart_item.quantity
                                             FROM cart_item
@@ -72,8 +77,8 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                             [{"cart_id": cart_id}])
 
         connection.execute(sqlalchemy.text("""UPDATE global_inventory
-                                            SET gold =  global_inventory.gold + (cart_item.quantity * potions.price)
-                                            FROM cart_item, potions
+                                            SET gold =  global_inventory.gold + total_gold
+                                            FROM cart_item JOIN potions
                                             WHERE potions.item_sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
                                             [{"cart_id": cart_id}])
 
@@ -85,4 +90,4 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     # need to update the gold can probably loop through the same way 
 
 
-    return {"total_potions_bought": 0, "total_gold_paid": 0}
+    return {"total_potions_bought": total_potions, "total_gold_paid": total_gold}
