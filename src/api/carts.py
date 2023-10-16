@@ -43,9 +43,10 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
     num = cart_item.quantity
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("""INSERT INTO cart_item (item_sku,quantity,cart_id) 
+        connection.execute(sqlalchemy.text("""INSERT INTO cart_item(item_sku,quantity,cart_id) 
                                             VALUES (potions.item_sku,  :num, :cart_id)      
-                                            FROM potions WHERE potions.item_sku = :item_sku """),
+                                            FROM potions 
+                                            WHERE potions.item_sku = :item_sku """),
                                             [{"num": num, "cart_id": cart_id, "item_sku": item_sku}])
                                         # there is an syntax error at or near FROM
 #     INSERT INTO cart_item (cart_id, quantity, potions_id) 

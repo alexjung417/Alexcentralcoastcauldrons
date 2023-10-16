@@ -81,6 +81,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     "price": Barrel.price,
                     "quantity": 1
                     })
+            gold -= Barrel.price
         elif blue < 10 and gold >= Barrel.price and Barrel.potion_type[2] == 1:
             a.append({
                     "sku": Barrel.sku,
@@ -89,6 +90,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     "price": Barrel.price,
                     "quantity": 1
                     })
+            gold -= Barrel.price
         elif green < 10 and gold >= Barrel.price and Barrel.potion_type[1] == 1:   
             a.append({
                     "sku": Barrel.sku,
@@ -97,6 +99,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     "price": Barrel.price,
                     "quantity": 1
                     })  
+            gold -= Barrel.price
         
     return a
 # [Barrel(sku='LARGE_RED_BARREL', ml_per_barrel=10000, potion_type=[1, 0, 0, 0], price=500, quantity=30), 

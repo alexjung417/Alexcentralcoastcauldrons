@@ -25,15 +25,14 @@ def get_inventory():        #need to change when I start pulling from the
         blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,100,0]'")).first().inventory 
         green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,100,0,0]'")).first().inventory
         #dark = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,0,100]'")).first().inventory
-        # yellow = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,50,50,0]'")).first().inventory
-        # wrong not sure how to do it1
+        yellow = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,50,50,0]'")).first().inventory
         
     
     return {"red_potions": red,
             "blue_potions": blue,
             "green_potions": green,
             #"dark_potions": dark,
-            # "yellow_potions": yellow, 
+            "yellow_potions": yellow, 
             "red_ml": red_ml, 
             "blue_ml": blue_ml,
             "green_ml": green_ml,

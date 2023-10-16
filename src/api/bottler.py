@@ -24,9 +24,9 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     with db.engine.begin() as connection:
         print(potions_delivered)
         additional_potions = sum(potion.quantity for potion in potions_delivered)
-        num_red_ml = sum(potion.quantity * potion.potion_type[0] for potion in potions_delivered)       # might give too much ml
-        num_blue_ml = sum(potion.quantity * potion.potion_type[2] for potion in potions_delivered)       # might give too much ml
-        num_green_ml = sum(potion.quantity * potion.potion_type[1] for potion in potions_delivered)       # might give too much ml
+        num_red_ml = sum(potion.quantity * potion.potion_type[0] for potion in potions_delivered)
+        num_blue_ml = sum(potion.quantity * potion.potion_type[2] for potion in potions_delivered)
+        num_green_ml = sum(potion.quantity * potion.potion_type[1] for potion in potions_delivered)       
         #num_dark_ml = sum(potion.quantity * potion.potion_type[3] for potion in potions_delivered)
         num_teal_ml = sum(potion.quantity * potion.potion_type[2] for potion in potions_delivered)
 
