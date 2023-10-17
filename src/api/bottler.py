@@ -35,7 +35,7 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     for PotionInventory in potions_delivered:
         connection.execute(
             sqlalchemy.text("""UPDATE potions
-                            SET inventory = inventory + :additional_potions
+                            SET quantity = quantity + :additional_potions
                             WHERE type = :potion_type       
                             """)    # in the potions database need to have type as a column
                             [{"additional_potions": potions_delivered.quantity,

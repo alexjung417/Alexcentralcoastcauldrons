@@ -68,7 +68,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                             JOIN potions on potions.item_sku = cart_item.item_sku 
                                             where cart_item.cart_id = :cart_id """))
         connection.execute(sqlalchemy.text("""UPDATE potions
-                                            SET inventory = potions.inventory - cart_item.quantity
+                                            SET quantity = potions.quantity - cart_item.quantity
                                             FROM cart_item
                                             WHERE potions.item_sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
                                             [{"cart_id": cart_id}])
