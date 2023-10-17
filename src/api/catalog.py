@@ -17,7 +17,7 @@ def get_catalog():
         potions = connection.execute(sqlalchemy.text("SELECT * FROM potions"))
         a = [] 
         for potion in potions:
-            if potion.quantity > 1:
+            if potion.quantity > 0:
                 a.append({
                         "sku": potion.item_sku,           # must change 
                         "name": potion.name,
