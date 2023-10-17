@@ -95,7 +95,11 @@ def get_bottle_plan():
                 "quantity": total
                 })
     elif (50 <= num_blue_ml < 200) &(50 <= num_green_ml < 200):
-        total = num_blue_ml // 50
+        if num_blue_ml < num_green_ml:
+            small = num_blue_ml
+        else:
+            small = num_green_ml
+        total = small // 50
         a.append({
             "potion_type": teal,
             "quantity": total
