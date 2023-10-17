@@ -74,9 +74,6 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                             [{"cart_id": cart_id}])
 
         connection.execute(sqlalchemy.text("""UPDATE global_inventory
-                                            SET gold =  global_inventory.gold + total_gold
-                                            FROM cart_item JOIN potions
-                                            WHERE potions.item_sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
-                                            [{"cart_id": cart_id}])
+                                            SET gold =  global_inventory.gold + total_gold"""))
     # need to update the gold can probably loop through the same way 
     return {"total_potions_bought": total_potions, "total_gold_paid": total_gold}
