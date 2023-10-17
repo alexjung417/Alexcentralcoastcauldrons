@@ -21,11 +21,11 @@ def get_inventory():        #need to change when I start pulling from the
         blue_ml = connection.execute(sqlalchemy.text("SELECT num_blue_ml FROM global_inventory")).first().num_blue_ml
         #dark_ml = connection.execute(sqlalchemy.text("SELECT num_dark_ml FROM global_inventory")).first().num_dark_ml
         gold = connection.execute(sqlalchemy.text("SELECT gold FROM global_inventory")).first().gold
-        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE name = 'RED'")).first().quantity 
-        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE name = 'BLUE'")).first().quantity 
-        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE name = 'GREEN'")).first().quantity
+        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'RED'")).first().quantity 
+        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'BLUE'")).first().quantity 
+        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'GREEN'")).first().quantity
         #dark = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,0,100]'")).first().quantity
-        yellow = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE name = 'teal'")).first().quantity
+        yellow = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'TEAL'")).first().quantity
         
     
     return {"red_potions": red,

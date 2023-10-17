@@ -64,10 +64,10 @@ def get_bottle_plan():
         num_green_ml = connection.execute(sqlalchemy.text("SELECT num_green_ml FROM global_inventory")).first().num_green_ml
         num_blue_ml = connection.execute(sqlalchemy.text("SELECT num_blue_ml FROM global_inventory")).first().num_blue_ml
         # num_dark_ml = connection.execute(sqlalchemy.text("SELECT num_dark_ml FROM global_inventory")).first().num_dark_ml
-        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE name = 'RED'")).first().type 
-        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = 'GREEN'")).first().type
-        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = 'BLUE'")).first().type
-        teal = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = 'TEAL'")).first().type
+        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'RED'")).first().type 
+        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'GREEN'")).first().type
+        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'BLUE'")).first().type
+        teal = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'TEAL'")).first().type
     
     a = []
 
