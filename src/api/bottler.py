@@ -32,24 +32,22 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
 
     # changes above
     
-    for PotionInventory in potions_delivered:
-        connection.execute(
-            sqlalchemy.text("""UPDATE potions
-                            SET quantity = quantity + :additional_potions
-                            WHERE type = :potion_type       
-                            """)    # in the potions database need to have type as a column
-                            [{"additional_potions": potions_delivered.quantity,
-                            "potion_type": potions_delivered.potion_type}])
+        for PotionInventory in potions_delivered:
+            connection.execute(
+                sqlalchemy.text("""UPDATE potions
+                                SET quantity = quantity + :additional_potions
+                                WHERE type = :potion_type       
+                                """),    # in the potions database need to have type as a column
+                                [{"additional_potions": PotionInventory.quantity,
+                                "potion_type": PotionInventory.potion_type}])
 
-    with db.engine.begin() as connection:
+
         connection.execute(sqlalchemy.text("""UPDATE global_inventory SET
                                             num_red_ml = num_red_ml - :num_red_ml,
-                                            num_blue_ml = num_blue_ml - :num_blue_ml , 
-                                            num_green_ml = num_green_ml - :num_green_ml,
-                                            num_blue_ml = num_blue_ml - :num_teal_ml , 
-                                            num_green_ml = num_green_ml - :num_teal_ml,
+                                            num_blue_ml = num_blue_ml - :num_blue_ml - :num_teal_ml, 
+                                            num_green_ml = num_green_ml - :num_green_ml - :num_teal_ml
                                             """), # need to subtract the amount needed for yellow ml
-                                             [{"num_red_ml": num_red_ml, "num_blue_ml": num_blue_ml, "num_green_ml": num_green_ml}])
+                                             [{"num_red_ml": num_red_ml, "num_blue_ml": num_blue_ml, "num_green_ml": num_green_ml, "num_teal_ml": num_teal_ml}])
     return "OK"
 
 # Gets called 4 times a day

@@ -34,7 +34,7 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
         # buys the stuff
 
     for Barrel in barrels_delivered:
-        goldg = goldg - (Barrel.price * Barrel.quantity)
+        goldg = goldg + (Barrel.price * Barrel.quantity)
         if Barrel.potion_type == [1,0,0,0]:
             redm += Barrel.ml_per_barrel * Barrel.quantity
         elif Barrel.potion_type ==  [0,1,0,0]:
@@ -52,7 +52,7 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
                                             num_green_ml = num_green_ml + :greenm,
                                             gold = gold - :goldg
                                             """),
-                                        [{"num_red_ml": num_red_ml, "num_blue_ml": num_blue_ml, "num_green_ml": num_green_ml, "gold": gold}])
+                                        [{"redm": redm, "bluem": bluem, "greenm": greenm, "goldg": goldg}])
  
     return "OK"
 
@@ -81,22 +81,10 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     return a
 # [{"sku": "MEDIUM_RED_BARREL", "ml_per_barrel": 2500, "potion_type": [1, 0, 0, 0], "price": 250, "quantity": 10
 #   },{"sku": "SMALL_RED_BARREL", "ml_per_barrel": 500, "potion_type": [1, 0, 0, 0], "price": 100, "quantity": 10
-#   },{
-#     "sku": "MEDIUM_GREEN_BARREL", "ml_per_barrel": 2500, "potion_type": [0, 1, 0, 0], "price": 250, "quantity": 10
-#   },{
-#     "sku": "SMALL_GREEN_BARREL", "ml_per_barrel": 500, "potion_type": [0, 1, 0, 0], "price": 100, "quantity": 10
-#   },{
-#     "sku": "MEDIUM_BLUE_BARREL", "ml_per_barrel": 2500, "potion_type": [0, 0, 1, 0], "price": 300, "quantity": 10
-#   },
-#   {
-#     "sku": "SMALL_BLUE_BARREL", "ml_per_barrel": 500, "potion_type": [0, 0, 1, 0], "price": 120, "quantity": 10
-#   },
-#   {
-#     "sku": "MINI_RED_BARREL", "ml_per_barrel": 200, "potion_type": [1, 0, 0, 0], "price": 60, "quantity": 1
-#   },
-#   {
-#     "sku": "MINI_GREEN_BARREL", "ml_per_barrel": 200, "potion_type": [0, 1, 0, 0], "price": 60, "quantity": 1
-#   },
-#   {
-#     "sku": "MINI_BLUE_BARREL", "ml_per_barrel": 200, "potion_type": [0, 0, 1, 0], "price": 60, "quantity": 1
-#   }]
+#   },{"sku": "MEDIUM_GREEN_BARREL", "ml_per_barrel": 2500, "potion_type": [0, 1, 0, 0], "price": 250, "quantity": 10
+#   },{"sku": "SMALL_GREEN_BARREL", "ml_per_barrel": 500, "potion_type": [0, 1, 0, 0], "price": 100, "quantity": 10
+#   },{"sku": "MEDIUM_BLUE_BARREL", "ml_per_barrel": 2500, "potion_type": [0, 0, 1, 0], "price": 300, "quantity": 10
+#   },{"sku": "SMALL_BLUE_BARREL", "ml_per_barrel": 500, "potion_type": [0, 0, 1, 0], "price": 120, "quantity": 10
+#   },{"sku": "MINI_RED_BARREL", "ml_per_barrel": 200, "potion_type": [1, 0, 0, 0], "price": 60, "quantity": 1
+#   },{"sku": "MINI_GREEN_BARREL", "ml_per_barrel": 200, "potion_type": [0, 1, 0, 0], "price": 60, "quantity": 1
+#   },{"sku": "MINI_BLUE_BARREL", "ml_per_barrel": 200, "potion_type": [0, 0, 1, 0], "price": 60, "quantity": 1}]
