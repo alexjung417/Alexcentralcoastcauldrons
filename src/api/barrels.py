@@ -78,8 +78,6 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                             "quantity": 1
                             })
                     gold -= Barrel.price
-                print( potion.quantity, gold, ptype)
-
     return a
 # [{"sku": "MEDIUM_RED_BARREL", "ml_per_barrel": 2500, "potion_type": [1, 0, 0, 0], "price": 250, "quantity": 10
 #   },{"sku": "SMALL_RED_BARREL", "ml_per_barrel": 500, "potion_type": [1, 0, 0, 0], "price": 100, "quantity": 10
