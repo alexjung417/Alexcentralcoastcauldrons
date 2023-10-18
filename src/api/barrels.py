@@ -68,7 +68,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         a = []
         for Barrel in wholesale_catalog:
             for potion in potions:
-                ptype = [x//100 for x in potion.type]
+                ptype = [x//100 for x in list(potion.type)]
                 if potion.quantity < 10 and gold >= Barrel.price and Barrel.potion_type == ptype:
                     a.append({
                             "sku": Barrel.sku,
