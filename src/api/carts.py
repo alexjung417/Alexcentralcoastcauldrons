@@ -22,7 +22,7 @@ class NewCart(BaseModel):
 def create_cart(new_cart: NewCart):
     """ """
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("INSERT INTO carts(name) VALUES(:new_cart)"), [{"name": new_cart}])
+        connection.execute(sqlalchemy.text("INSERT INTO carts(name) VALUES (:name)"), [{"name": new_cart.customer}])
         i = connection.execute(sqlalchemy.text("SELECT * FROM carts")).first().id
     return {"cart_id": i}
 
@@ -43,8 +43,8 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
     num = cart_item.quantity
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("""INSERT INTO cart_item(item_sku,quantity,cart_id) 
-                                            SELECT (potions.item_sku,  :num, :cart_id)      
+        connection.execute(sqlalchemy.text("""INSERT INTO cart_item(quantity, cart_id, item_sku) 
+                                            SELECT  :num, :cart_id, potions.item_sku      
                                             FROM potions 
                                             WHERE potions.item_sku = :item_sku """),
                                             [{"num": num, "cart_id": cart_id, "item_sku": item_sku}])
@@ -62,11 +62,13 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     """ """     # this is wrong 
    #https://observablehq.com/@calpoly-pierce/ddl-dml
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("""SELECT sum(cart_item.quantity * potions.price) as total_gold,
-                                            sum(cart_item.quantity) as total_potions,
+        result = connection.execute(sqlalchemy.text("""SELECT sum(cart_item.quantity * potions.price) as total_gold,
+                                            sum(cart_item.quantity) as total_potions
                                             FROM cart_item 
                                             JOIN potions on potions.item_sku = cart_item.item_sku 
-                                            where cart_item.cart_id = :cart_id """))
+                                            where cart_item.cart_id = :cart_id """),
+                                            [{"cart_id": cart_id}])
+        total_gold, total_potions = result.first()
         connection.execute(sqlalchemy.text("""UPDATE potions
                                             SET quantity = potions.quantity - cart_item.quantity
                                             FROM cart_item
@@ -74,6 +76,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                             [{"cart_id": cart_id}])
 
         connection.execute(sqlalchemy.text("""UPDATE global_inventory
-                                            SET gold =  global_inventory.gold + total_gold"""))
+                                            SET gold =  global_inventory.gold + :total_gold"""),
+                                            [{"total_gold": total_gold}])
     # need to update the gold can probably loop through the same way 
     return {"total_potions_bought": total_potions, "total_gold_paid": total_gold}
