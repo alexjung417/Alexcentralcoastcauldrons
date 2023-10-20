@@ -17,11 +17,16 @@ def get_catalog():
         potions = connection.execute(sqlalchemy.text("SELECT * FROM potions"))
         a = [] 
         for potion in potions:
-            if potion.quantity > 0:
+            pots = connection.execute(sqlalchemy.text("""  SELECT SUM(new_potion)
+                                                            FROM potion_ledger
+                                                            WHERE potion_id = :id
+                                                        """), 
+                                                        [{"id": potion.id}]).first().new_potion
+            if pots > 0:
                 a.append({
                         "sku": potion.item_sku,           # must change 
                         "name": potion.name,
-                        "quantity": potion.quantity,
+                        "quantity": pots,
                         "price": potion.price,
                         "potion_type": potion.type,
                     })

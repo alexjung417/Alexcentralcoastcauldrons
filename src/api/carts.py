@@ -23,7 +23,7 @@ def create_cart(new_cart: NewCart):
     """ """
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("INSERT INTO carts(name) VALUES (:name)"), [{"name": new_cart.customer}])
-        i = connection.execute(sqlalchemy.text("SELECT * FROM carts")).first().id
+        i = connection.execute(sqlalchemy.text("SELECT * FROM carts WHERE name = :name"),[{"name": new_cart.customer}]).first().id
     return {"cart_id": i}
 
 
@@ -69,14 +69,19 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                             where cart_item.cart_id = :cart_id """),
                                             [{"cart_id": cart_id}])
         total_gold, total_potions = result.first()
-        connection.execute(sqlalchemy.text("""UPDATE potions
-                                            SET quantity = potions.quantity - cart_item.quantity
-                                            FROM cart_item
-                                            WHERE potions.item_sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
-                                            [{"cart_id": cart_id}])
-
-        connection.execute(sqlalchemy.text("""UPDATE global_inventory
-                                            SET gold =  global_inventory.gold + :total_gold"""),
+        # connection.execute(sqlalchemy.text("""UPDATE potions
+        #                                     SET quantity = potions.quantity - cart_item.quantity
+        #                                     FROM cart_item
+        #                                     WHERE potions.item_sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
+        #                                     [{"cart_id": cart_id}])
+        connection.execute(sqlalchemy.text(""" INSERT INTO potion_ledger(potion_id,new_potion) 
+                                                SELECT potion.id, 0 - cart_item.quantity 
+                                                FROM cart_item
+                                                JOIN potions on potions.item_sku = cart_item.item_sku
+                                                WHERE cart_item.cart_id = :cart_id"""),
+                                                [{"cart_id": cart_id}])                                    
+        connection.execute(sqlalchemy.text("""INSERT INTO inventory_ledger(gold)
+                                            VALUES (:total_gold"""),
                                             [{"total_gold": total_gold}])
     # need to update the gold can probably loop through the same way 
     return {"total_potions_bought": total_potions, "total_gold_paid": total_gold}
