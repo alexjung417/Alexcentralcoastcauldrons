@@ -62,23 +62,26 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         potions = connection.execute(sqlalchemy.text("SELECT * FROM potions"))
         a = []
         for potion in potions:
-            pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion)
+            pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion) as new_potion
                                                             FROM potion_ledger
+
                                                             WHERE potion_id = :id
                                                         """), 
-                                                        [{"id": potion.id}]).first().new_potion
+                                                        [{"id": potion.id}]).first()
                                                         # this should be running through all potions and counting the amount of each potion type
-            for Barrel in wholesale_catalog:
-                ptype = [1 if x != 0 else 0 for x in potion.type]
-                if (pots < 5) and (gold >= Barrel.price) and (Barrel.potion_type == ptype):
-                    a.append({
-                            "sku": Barrel.sku,
-                            "ml_per_barrel": Barrel.ml_per_barrel,
-                            "potion_type": Barrel.potion_type,
-                            "price": Barrel.price,
-                            "quantity": gold // Barrel.price
-                            })
-                    gold -= Barrel.price * (gold//Barrel.price)
+            pots = pots.new_potion
+            if pots is not None:    
+                for Barrel in wholesale_catalog:
+                    ptype = [1 if x != 0 else 0 for x in potion.type]
+                    if (pots < 5) and (gold >= Barrel.price) and (Barrel.potion_type == ptype):
+                        a.append({
+                                "sku": Barrel.sku,
+                                "ml_per_barrel": Barrel.ml_per_barrel,
+                                "potion_type": Barrel.potion_type,
+                                "price": Barrel.price,
+                                "quantity": gold // Barrel.price
+                                })
+                        gold -= Barrel.price * (gold//Barrel.price)
     return a
 # [{"sku": "MEDIUM_RED_BARREL", "ml_per_barrel": 2500, "potion_type": [1, 0, 0, 0], "price": 250, "quantity": 10
 #   },{"sku": "SMALL_RED_BARREL", "ml_per_barrel": 500, "potion_type": [1, 0, 0, 0], "price": 100, "quantity": 10

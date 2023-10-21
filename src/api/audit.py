@@ -16,23 +16,32 @@ router = APIRouter(
 def get_inventory():        #need to change when I start pulling from the 
     """ """
     with db.engine.begin() as connection:
-        red_ml = connection.execute(sqlalchemy.text("SELECT num_red_ml FROM global_inventory")).first().num_red_ml
-        green_ml = connection.execute(sqlalchemy.text("SELECT num_green_ml FROM global_inventory")).first().num_green_ml
-        blue_ml = connection.execute(sqlalchemy.text("SELECT num_blue_ml FROM global_inventory")).first().num_blue_ml
-        #dark_ml = connection.execute(sqlalchemy.text("SELECT num_dark_ml FROM global_inventory")).first().num_dark_ml
-        gold = connection.execute(sqlalchemy.text("SELECT gold FROM global_inventory")).first().gold
-        red = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'RED'")).first().quantity 
-        blue = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'BLUE'")).first().quantity 
-        green = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'GREEN'")).first().quantity
-        #dark = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE type = '[0,0,0,100]'")).first().quantity
-        yellow = connection.execute(sqlalchemy.text("SELECT * FROM potions WHERE item_sku = 'TEAL'")).first().quantity
+        result = connection.execute(sqlalchemy.text("""SELECT
+                                                    SUM(num_red_ml) as red_ml,
+                                                    SUM(num_blue_ml) as blue_ml, 
+                                                    SUM(num_green_ml) as green_ml,
+                                                    SUM(gold) as gold  
+                                                    FROM inventory_ledger
+                                                    """)).first()       # need this for each
+        red_ml = result.red_ml
+        blue_ml = result.blue_ml
+        green_ml = result.green_ml
+        result = result.gold
+        # potions = connection.execute(sqlalchemy.text("SELECT * FROM potions"))
+        # for potion in potions:
+        #     pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion) as pots
+        #                                                     FROM potion_ledger
+        #                                                     WHERE potion_id = :id
+        #                                                 """), 
+        #                                                 [{"id": potion.id}]).first().new_potion
         
     
-    return {"red_potions": red,
-            "blue_potions": blue,
-            "green_potions": green,
-            #"dark_potions": dark,
-            "yellow_potions": yellow, 
+    return {
+    # "red_potions": red,
+    #         "blue_potions": blue,
+    #         "green_potions": green,
+    #         #"dark_potions": dark,
+    #         "yellow_potions": yellow, 
             "red_ml": red_ml, 
             "blue_ml": blue_ml,
             "green_ml": green_ml,

@@ -59,30 +59,40 @@ def get_bottle_plan():
 
     with db.engine.begin() as connection:
         result = connection.execute(sqlalchemy.text("""SELECT
-                                                    SUM(num_red_ml) as red_ml, 
+                                                    SUM(num_red_ml) as red_ml,
+                                                    SUM(num_blue_ml) as blue_ml, 
+                                                    SUM(num_green_ml) as green_ml  
                                                     FROM inventory_ledger
                                                     """)).first()       # need this for each
         red_ml = result.red_ml
+        blue_ml = result.blue_ml
+        green_ml = result.green_ml
         potions = connection.execute(sqlalchemy.text( "SELECT * FROM potions"))
         for potion in potions:
-            pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion)
+            pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion) as pots
                                                             FROM potion_ledger
                                                             WHERE potion_id = :id
                                                         """), 
-                                                        [{"id": potion.id}]).first().new_potion
-            new_pots = 0
-            if (pots < min_pot):
-                red = potion.type[0]
-                # do for each ml 
-                while(red <= red_ml) & (pots < min_pot):
-                    pots += 1
-                    red_ml -= red
-                    new_pots += 1
-            if( new_pots > 0):
-                a.append({
-                "potion_type": potion.type,
-                "quantity": new_pot
-                })
+                                                        [{"id": potion.id}]).first()
+            pots = pots.new_potion
+            if pots is not None:
+                new_pots = 0
+                if (pots < min_pot):
+                    red = potion.type[0]
+                    green = potion.type[1]
+                    blue = potion.type[2]
+                    # do for each ml 
+                    while(red <= red_ml) & (pots < min_pot) &(blue <= blue_ml)&(green <= green_ml):
+                        pots += 1
+                        red_ml -= red
+                        blue_ml -= blue
+                        green_ml -= green
+                        new_pots += 1
+                if(new_pots > 0):
+                    a.append({
+                    "potion_type": potion.type,
+                    "quantity": new_pot
+                    })
     return a
 
     # Each bottle has a quantity of what proportion of red, blue, and
