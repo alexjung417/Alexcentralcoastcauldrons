@@ -64,7 +64,6 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         for potion in potions:
             pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion) as new_potion
                                                             FROM potion_ledger
-
                                                             WHERE potion_id = :id
                                                         """), 
                                                         [{"id": potion.id}]).first()
