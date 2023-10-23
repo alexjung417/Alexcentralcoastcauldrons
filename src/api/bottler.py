@@ -74,7 +74,7 @@ def get_bottle_plan():
                                                             WHERE potion_id = :id
                                                         """), 
                                                         [{"id": potion.id}]).first()
-            pots = pots.new_potion
+            pots = pots.pots
             if pots is not None:
                 new_pots = 0
                 if (pots < min_pot):

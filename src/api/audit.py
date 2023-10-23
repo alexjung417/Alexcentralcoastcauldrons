@@ -26,7 +26,7 @@ def get_inventory():        #need to change when I start pulling from the
         red_ml = result.red_ml
         blue_ml = result.blue_ml
         green_ml = result.green_ml
-        result = result.gold
+        gold = result.gold
         # potions = connection.execute(sqlalchemy.text("SELECT * FROM potions"))
         # for potion in potions:
         #     pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion) as pots
