@@ -25,8 +25,7 @@ def get_inventory():        #need to change when I start pulling from the
         gold = result.gold
         pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion) as new_potions
                                                         FROM potion_ledger
-                                                    """), 
-                                                    [{"id": potion.id}]).first().new_potions
+                                                    """)).first().new_potions
         
     
     return {

@@ -69,11 +69,6 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                             where cart_item.cart_id = :cart_id """),
                                             [{"cart_id": cart_id}])
         total_gold, total_potions = result.first()
-        # connection.execute(sqlalchemy.text("""UPDATE potions
-        #                                     SET quantity = potions.quantity - cart_item.quantity
-        #                                     FROM cart_item
-        #                                     WHERE potions.item_sku = cart_item.item_sku and cart_item.cart_id = :cart_id"""),
-        #                                     [{"cart_id": cart_id}])
         connection.execute(sqlalchemy.text(""" INSERT INTO potion_ledger(potion_id,new_potion) 
                                                 SELECT potion.id, 0 - cart_item.quantity 
                                                 FROM cart_item
