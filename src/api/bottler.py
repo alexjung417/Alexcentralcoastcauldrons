@@ -75,24 +75,25 @@ def get_bottle_plan():
                                                         """), 
                                                         [{"id": potion.id}]).first()
             pots = pots.pots
-            if pots is not None:
-                new_pots = 0
-                if (pots < min_pot):
-                    red = potion.type[0]
-                    green = potion.type[1]
-                    blue = potion.type[2]
+            if pots is None:
+                pots = 0
+            new_pots = 0
+            if (pots < min_pot):
+                red = potion.type[0]
+                green = potion.type[1]
+                blue = potion.type[2]
                     # do for each ml 
-                    while(red <= red_ml) & (pots < min_pot) &(blue <= blue_ml)&(green <= green_ml):
-                        pots += 1
-                        red_ml -= red
-                        blue_ml -= blue
-                        green_ml -= green
-                        new_pots += 1
-                if(new_pots > 0):
-                    a.append({
-                    "potion_type": potion.type,
-                    "quantity": new_pot
-                    })
+                while(red <= red_ml) & (pots < min_pot) &(blue <= blue_ml)&(green <= green_ml):
+                    pots += 1
+                    red_ml -= red
+                    blue_ml -= blue
+                    green_ml -= green
+                    new_pots += 1
+            if(new_pots > 0):
+                a.append({
+                "potion_type": potion.type,
+                "quantity": new_pot
+                })
     return a
 
     # Each bottle has a quantity of what proportion of red, blue, and

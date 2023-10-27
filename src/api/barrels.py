@@ -71,17 +71,17 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
             pots = pots.new_potion
             if pots is None: 
                 pots = 0   
-                for Barrel in wholesale_catalog:
-                    ptype = [1 if x != 0 else 0 for x in potion.type]
-                    if (pots < 5) and (gold >= Barrel.price) and (Barrel.potion_type == ptype):
-                        a.append({
+            for Barrel in wholesale_catalog:
+                ptype = [1 if x != 0 else 0 for x in potion.type]
+                if (pots < 5) and (gold >= Barrel.price) and (Barrel.potion_type == ptype):
+                    a.append({
                                 "sku": Barrel.sku,
                                 "ml_per_barrel": Barrel.ml_per_barrel,
                                 "potion_type": Barrel.potion_type,
                                 "price": Barrel.price,
                                 "quantity": gold // Barrel.price
                                 })
-                        gold -= Barrel.price * (gold//Barrel.price)
+                    gold -= Barrel.price * (gold//Barrel.price)
     return a
 # [{"sku": "MEDIUM_RED_BARREL", "ml_per_barrel": 2500, "potion_type": [1, 0, 0, 0], "price": 250, "quantity": 10
 #   },{"sku": "SMALL_RED_BARREL", "ml_per_barrel": 500, "potion_type": [1, 0, 0, 0], "price": 100, "quantity": 10
