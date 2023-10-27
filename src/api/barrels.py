@@ -69,7 +69,8 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                                                         [{"id": potion.id}]).first()
                                                         # this should be running through all potions and counting the amount of each potion type
             pots = pots.new_potion
-            if pots is not None:    
+            if pots is None: 
+                pots = 0   
                 for Barrel in wholesale_catalog:
                     ptype = [1 if x != 0 else 0 for x in potion.type]
                     if (pots < 5) and (gold >= Barrel.price) and (Barrel.potion_type == ptype):
