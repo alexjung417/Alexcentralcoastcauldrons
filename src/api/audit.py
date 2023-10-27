@@ -30,7 +30,7 @@ def get_inventory():        #need to change when I start pulling from the
     
     return {
             "ml": ml,
-            "potions": potions,
+            "potions": pots,
             "gold": gold}
 
 class Result(BaseModel):
