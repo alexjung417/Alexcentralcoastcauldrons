@@ -83,7 +83,7 @@ def get_bottle_plan():
                 green = potion.type[1]
                 blue = potion.type[2]
                     # do for each ml 
-                while(red <= red_ml) & (pots < min_pot) &(blue <= blue_ml)&(green <= green_ml):
+                while(red <= red_ml) & (pots < min_pot) & (blue <= blue_ml) & (green <= green_ml):
                     pots += 1
                     red_ml -= red
                     blue_ml -= blue

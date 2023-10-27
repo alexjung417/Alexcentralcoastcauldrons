@@ -26,6 +26,8 @@ def get_inventory():        #need to change when I start pulling from the
         pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion) as new_potions
                                                         FROM potion_ledger
                                                     """)).first().new_potions
+        if pots is None:
+            pots = 0
         
     
     return {
