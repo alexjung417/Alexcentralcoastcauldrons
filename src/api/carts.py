@@ -42,7 +42,7 @@ def search_orders(
                                                         cart_item.item_sku as item_sku,
                                                         carts.name as customer_name,
                                                         inventory_ledger.gold as line_gold,
-                                                        inventory_ledger.created_at as times,
+                                                        inventory_ledger.created_at as ti
                                                         FROM cart_item
                                                         JOIN carts on cart_item.cart_id = carts.id
                                                         JOIN inventory_ledger on carts.transaction = inventory_ledger.id
@@ -58,7 +58,7 @@ def search_orders(
         "item_sku": item.item_sku,
         "customer_name": item.customer_name,
         "line_item_total": item.line_gold,
-        "timestamp": item.times,})
+        "timestamp": item.ti,})
     previous = current - 5
     previous = "" if previous < 0 else str(previous)
     next = current + 5
