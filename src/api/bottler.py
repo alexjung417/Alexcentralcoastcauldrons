@@ -67,7 +67,7 @@ def get_bottle_plan():
         red_ml = result.red_ml
         blue_ml = result.blue_ml
         green_ml = result.green_ml
-        potions = connection.execute(sqlalchemy.text( "SELECT * FROM potions"))
+        potions = connection.execute(sqlalchemy.text("SELECT * FROM potions"))
         for potion in potions:
             pots = connection.execute(sqlalchemy.text("""SELECT SUM(new_potion) as pots
                                                             FROM potion_ledger

@@ -36,13 +36,16 @@ def search_orders(
     sort_order: search_sort_order = search_sort_order.desc,
 ):
     with db.engine.begin() as connection:
-        current = 0 if (search_page == "") else int(search_page)
+        if (search_page == ""):
+            current = 0 
+        else:
+             int(search_page)
         cart_item = connection.execute(sqlalchemy.text(f"""SELECT
                                                         cart_item.cart_id as line_item_id,
                                                         cart_item.item_sku as item_sku,
                                                         carts.name as customer_name,
                                                         inventory_ledger.gold as line_gold,
-                                                        inventory_ledger.created_at as ti
+                                                        inventory_ledger.created_at as timestamp
                                                         FROM cart_item
                                                         JOIN carts on cart_item.cart_id = carts.id
                                                         JOIN inventory_ledger on carts.transaction = inventory_ledger.id
@@ -58,7 +61,7 @@ def search_orders(
         "item_sku": item.item_sku,
         "customer_name": item.customer_name,
         "line_item_total": item.line_gold,
-        "timestamp": item.ti,})
+        "timestamp": item.timestamp,})
     previous = current - 5
     previous = "" if previous < 0 else str(previous)
     next = current + 5
