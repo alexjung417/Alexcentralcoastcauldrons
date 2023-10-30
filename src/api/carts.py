@@ -65,7 +65,7 @@ def search_orders(
     previous = current - 5
     previous = "" if previous < 0 else str(previous)
     next = current + 5
-    next = "" if len(cart_items) < 6 else str(next) 
+    next = "" if len(cart_item) < 6 else str(next) 
     return {
         "previous": previous,
         "next": next,
