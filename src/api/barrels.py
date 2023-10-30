@@ -58,7 +58,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     print(wholesale_catalog)
         # reads my data 
     with db.engine.begin() as connection:
-        gold = connection.execute(sqlalchemy.text("SELECT gold FROM inventory_ledger")).first().gold 
+        gold = connection.execute(sqlalchemy.text("SELECT sum(gold) as gold FROM inventory_ledger")).first().gold 
         potions = connection.execute(sqlalchemy.text("SELECT * FROM potions"))
         a = []
         for potion in potions:
@@ -73,7 +73,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                 pots = 0   
             for Barrel in wholesale_catalog:
                 ptype = [1 if x != 0 else 0 for x in potion.type]
-                if (pots < 5) and (gold >= Barrel.price) and (Barrel.potion_type == ptype):
+                if (pots < 5) & (gold >= Barrel.price) & (Barrel.potion_type == ptype):
                     a.append({
                                 "sku": Barrel.sku,
                                 "ml_per_barrel": Barrel.ml_per_barrel,
