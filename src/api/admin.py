@@ -14,6 +14,14 @@ def reset():
     Reset the game state. Gold goes to 100, all potions are removed from
     inventory, and all barrels are removed from inventory. Carts are all reset.
     """
+    with db.engine.begin() as connection:
+        connection.execute(sqlalchemy.text("TRUNCATE inventory_ledger CASCADE"))
+        connection.execute(sqlalchemy.text("TRUNCATE potion_ledger CASCADE"))
+        transaction_id = connection.execute(sqlalchemy.text("INSERT INTO inventory_ledger DEFAULT VALUES RETURNING id")).first().id
+        connection.execute(sqlalchemy.text("""
+            INSERT INTO potion_ledger (transaction)
+            VALUES (:transaction_id)
+            """), {"transaction_id": transaction_id})
     return "OK"
 
 
@@ -23,7 +31,7 @@ def get_shop_info():
 
     # TODO: Change me!
     return {
-        "shop_name": "Potion Shop",
-        "shop_owner": "Potion Seller",
+        "shop_name": "Panda Potions",
+        "shop_owner": "Alexander Jung",
     }
 
