@@ -18,7 +18,7 @@ def reset():
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("TRUNCATE inventory_ledger CASCADE"))
         connection.execute(sqlalchemy.text("TRUNCATE potion_ledger CASCADE"))
-        transaction_id = connection.execute(sqlalchemy.text("INSERT INTO inventory_ledger DEFAULT VALUES RETURNING id")).first().id
+        transaction_id = connection.execute(sqlalchemy.text("INSERT INTO inventory_ledger(gold) VALUES(100) RETURNING id")).first().id
         connection.execute(sqlalchemy.text("""
             INSERT INTO potion_ledger (transaction)
             VALUES (:transaction_id)
