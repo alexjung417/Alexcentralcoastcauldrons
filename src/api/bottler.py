@@ -95,7 +95,6 @@ def get_bottle_plan():
                 "potion_type": potion.type,
                 "quantity": new_pots
                 })
-    print(a)
     return a
 
     # Each bottle has a quantity of what proportion of red, blue, and
