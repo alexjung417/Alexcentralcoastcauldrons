@@ -154,7 +154,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
         total_gold, total_potions = result.first()
         transact = connection.execute(sqlalchemy.text("""INSERT INTO inventory_ledger(gold)
                                             VALUES (:total_gold)
-                                            RETURNING id """).first().id
+                                            RETURNING id """),
                                             [{"total_gold": total_gold}])
         connection.execute(sqlalchemy.text("""INSERT INTO potion_ledger(potion_id,new_potion,transaction) 
                                                 SELECT potion.id, 0 - cart_item.quantity, :transact
