@@ -156,15 +156,16 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                             VALUES (:total_gold)
                                             RETURNING id """),
                                             [{"total_gold": total_gold}])
+        transact = transact.fetchone()[0]
         connection.execute(sqlalchemy.text("""INSERT INTO potion_ledger(potion_id,new_potion,transaction) 
-                                                SELECT potion.id, 0 - cart_item.quantity, :transact
+                                                SELECT potions.id, 0 - cart_item.quantity, :transact
                                                 FROM cart_item
                                                 JOIN potions on potions.item_sku = cart_item.item_sku
                                                 WHERE cart_item.cart_id = :cart_id"""),
-                                                [{"cart_id": cart_id, "transact":transact}])
+                                                {"cart_id": cart_id, "transact": transact})
         connection.execute(sqlalchemy.text("""UPDATE carts
                                             SET transaction = :transact
-                                            WHERE cart.id = :cart_id"""),[{"cart_id": cart_id,"transact":transact}])                                    
+                                            WHERE carts.id = :cart_id"""),{"cart_id": cart_id,"transact":transact})                                    
 
     # need to update the gold can probably loop through the same way 
     return {"total_potions_bought": total_potions, "total_gold_paid": total_gold}
